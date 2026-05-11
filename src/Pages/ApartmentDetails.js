@@ -24,9 +24,9 @@ const ApartmentDetails = () => {
   const apartment = apartmentsList.find(apartment => apartment.id === parseInt(id));
 
   const [status, setStatus] = useState(apartment?.status || '');
-  const [showTourModal, setShowTourModal] = useState(false);
-  const [tourDate, setTourDate] = useState('');
-  const [tourTime, setTourTime] = useState('');
+//   const [showTourModal, setShowTourModal] = useState(false);
+//   const [tourDate, setTourDate] = useState('');
+//   const [tourTime, setTourTime] = useState('');
 
   useEffect(() => {
     localStorage.setItem('apartments', JSON.stringify(apartmentsList));
