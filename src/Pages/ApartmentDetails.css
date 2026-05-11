@@ -1,0 +1,108 @@
+/* ApartmentDetails.css */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #252d45;
+    font-family: Inter, sans-serif;
+}
+
+.details-container {
+    min-height: 100vh;
+    padding: 40px 28px;
+    background: #252d45;
+    color: white;
+}
+
+.details-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.status-dropdown {
+    width: 100%;
+    max-width: 360px;
+    padding: 18px 24px;
+    border: none;
+    border-radius: 22px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 40px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+}
+
+.status-dropdown.emailed {
+    background: #ff5b5b;
+}
+
+.status-dropdown.scheduled {
+    background: #f5b64f;
+}
+
+.status-dropdown.applied {
+    background: #12c968;
+}
+
+.details-section {
+    margin-bottom: 40px;
+}
+
+.details-section h2 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.details-section p {
+    color: #d8dceb;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.map-placeholder {
+    width: 100%;
+    max-width: 420px;
+    height: 300px;
+    background: #4f5872;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+    color: #cfd5e6;
+    font-weight: 600;
+}
+
+.website-section {
+    margin-bottom: 60px;
+}
+
+.website-section a {
+    color: #4c84ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.website-section a:hover {
+    text-decoration: underline;
+}
+
+.back-button {
+    border: none;
+    background: none;
+    color: #ff6b6b;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+}
+
+.back-button:hover {
+    opacity: 0.8;
+}

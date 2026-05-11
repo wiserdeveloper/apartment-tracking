@@ -1,0 +1,189 @@
+/* App.css */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, sans-serif;
+}
+
+body {
+  background: #252d45;
+}
+
+.app-container {
+  min-height: 100vh;
+  padding: 40px 22px;
+  color: white;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  margin-top: 10px;
+}
+
+.top-nav {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.top-nav button,
+.calendar-link {
+  background: none;
+  border: none;
+  color: #7d8397;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.top-nav button:hover,
+.calendar-link:hover {
+  color: white;
+}
+
+.top-nav .active {
+  color: white;
+}
+
+.apartment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.apartment-card {
+  background: #535c76;
+  border-radius: 22px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.25s ease;
+  margin: 10px
+}
+
+.apartment-card:hover {
+  transform: translateY(-3px);
+  background: #606b88;
+}
+
+.apartment-card h2 {
+  font-size: 1.2rem;
+  width: 160px;
+}
+
+.status-pill {
+  min-width: 120px;
+  text-align: center;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.scheduled {
+  background: #f6b64d;
+  color: white;
+}
+
+.emailed {
+  background: #ff5b5b;
+  color: white;
+}
+
+.applied {
+  background: #11c968;
+  color: white;
+}
+
+.add-card {
+  height: 110px;
+  background: #535c76;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: #aeb3c3;
+  cursor: pointer;
+  transition: 0.25s ease;
+  margin: 10px
+}
+
+.add-card:hover {
+  background: #606b88;
+  transform: translateY(-3px);
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.modal {
+  width: 100%;
+  max-width: 450px;
+  background: #39435f;
+  padding: 30px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal h2 {
+  margin-bottom: 10px;
+}
+
+.modal input,
+.modal select {
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background: #4d5875;
+  color: white;
+  outline: none;
+}
+
+.modal input::placeholder {
+  color: #c0c6d6;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.modal-buttons button {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.save-btn {
+  background: #11c968;
+  color: white;
+}
+
+.placeholder-page {
+  min-height: 100vh;
+  background: #252d45;
+  color: white;
+  padding: 40px;
+}
