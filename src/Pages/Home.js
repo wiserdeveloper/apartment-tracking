@@ -60,11 +60,51 @@ const Home = () => {
     setShowModal(false);
 };
 
+// Scheduled Tours Section
+const upcomingTours = apartmentsList
+  .filter(apt => apt.status === 'Scheduled' && apt.tourDate)
+  .sort((a, b) => new Date(a.tourDate) - new Date(b.tourDate));
+
 
   return (
     <div className="app-container">
-      <h1 className="title">Apartment Tracking</h1>
+        <div className="page-header">
+            <h1 className="title">Apartment Tracking</h1>
+        </div>
+      {/* Upcoming Tours Section */}
+      {upcomingTours.length > 0 && (
+  <div className="upcoming-dashboard">
+    <h2>Upcoming Tours</h2>
 
+    <div className="upcoming-scroll">
+      {upcomingTours.map((apt) => (
+        <div
+          key={apt.id}
+          className="upcoming-card"
+          onClick={() => navigate(`/apartment/${apt.id}`)}
+        >
+          <div className="upcoming-name">{apt.name}</div>
+
+          <div className="upcoming-date">
+            {new Date(apt.tourDate).toLocaleString([], {
+              weekday: 'short',
+              month: 'short',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </div>
+
+          <div className="upcoming-address">
+            {apt.address}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+{/* End Upcoming Tours Section */}
+<div className="page-header">
       <div className="top-nav">
         <button
         className={`nav-button ${activeFilter === 'All' ? 'active' : ''}`}
@@ -92,9 +132,10 @@ const Home = () => {
             Applied
         </button>
         <NavLink to="/calendar" className="calendar-link">
-            Calendar
+            📅
         </NavLink>
       </div>
+    </div>
 
       <div className="apartments-list">
         {filteredApartments.map(apartment => (

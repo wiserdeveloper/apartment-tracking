@@ -11,21 +11,24 @@ const apartments = [
         name: 'The Vue',
         status: 'Scheduled',
         address: '718 E Georgia St, Indianapolis, IN 46202',
-        website: 'https://www.apartmentsdowntownindianapolis.com/?rcstdid=Mg%3D%3D-YRjTEizZPgM%3D'
+        website: 'https://www.apartmentsdowntownindianapolis.com/?rcstdid=Mg%3D%3D-YRjTEizZPgM%3D',
+        tourDate: 'June 15, 2026 at 11:00 AM'
     },
     {
         id: 3,
         name: 'The Stella',
         status: 'Scheduled',
         address: '1827 N Meridian St, Indianapolis, IN 46202',
-        website: 'https://thestellaindy.com/?utm_knock=gmb?utm_source=gmb&utm_medium=organic'
+        website: 'https://thestellaindy.com/?utm_knock=gmb?utm_source=gmb&utm_medium=organic',
+        tourDate: 'June 18, 2026 at 2:00 PM'
     },
     {
         id: 4,
         name: '3621 N Kenwood Ave',
         status: 'Scheduled',
         address: '3621 N Kenwood Ave, Indianapolis, IN 46202',
-        website: 'https://www.zillow.com/homedetails/3621-N-Kenwood-Ave-Indianapolis-IN-46208/1108425_zpid/'
+        website: 'https://www.zillow.com/homedetails/3621-N-Kenwood-Ave-Indianapolis-IN-46208/1108425_zpid/',
+        tourDate: 'June 20, 2026 at 4:30 PM'
     },
     {
         id: 5,
