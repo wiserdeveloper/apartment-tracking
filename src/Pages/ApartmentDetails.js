@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { supabase } from '../supabaseClient';
@@ -14,12 +14,12 @@ const ApartmentDetails = () => {
   const [tourDateInput, setTourDateInput] = useState('');
   
   const [apartment, setApartment] = useState(null);
-  const [loading, setLoading] = useState(true);
+ const [loading, setLoading] = useState(true);
   // const [status, setStatus] = useState('');
 
   const [status, setStatus] = useState(apartment?.status || '');
 
-  const fetchApartment = async () => {
+  const fetchApartment = useCallback(async () => {
   const { data, error } = await supabase
     .from('apartments')
     .select('*')
@@ -35,11 +35,11 @@ const ApartmentDetails = () => {
   setApartment(data);
   setStatus(data.status);
   setLoading(false);
-};
+}, [id]);
 
 useEffect(() => {
   fetchApartment();
-}, [id]);
+}, [fetchApartment]);
 
 const handleStatusChange = async (e) => {
   const updatedStatus = e.target.value;
@@ -104,6 +104,10 @@ const handleDeleteApartment = async () => {
 
   navigate('/');
 };
+
+if (loading) {
+  return <h1>Loading...</h1>;
+}
 
 if (!apartment) {
   return <h1>Apartment Not Found</h1>;
