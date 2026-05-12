@@ -80,7 +80,7 @@ const handleSaveTourDate = async () => {
     .from('apartments')
     .update({
       status: 'Scheduled',
-      tour_date: tourDateInput
+      tour_date: new Date(tourDateInput).toISOString()
     })
     .eq('id', id);
 

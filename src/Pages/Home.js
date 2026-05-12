@@ -69,9 +69,9 @@ const Home = () => {
           status: newApartment.status,
           website: newApartment.website,
           tour_date:
-            newApartment.status === 'Scheduled'
-              ? newApartment.tour_date
-              : null
+  newApartment.status === 'Scheduled'
+    ? new Date(newApartment.tour_date).toISOString()
+    : null
         }
       ]);
 
