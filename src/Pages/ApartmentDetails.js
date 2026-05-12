@@ -127,6 +127,25 @@ const ApartmentDetails = () => {
     fetchApartment();
   };
 
+  const handleToggleFavorite = async () => {
+  const updatedFavorite = !apartment.favorite;
+
+  const { error } = await supabase
+    .from('apartments')
+    .update({ favorite: updatedFavorite })
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error updating favorite:', error);
+    return;
+  }
+
+  setApartment({
+    ...apartment,
+    favorite: updatedFavorite
+  });
+};
+
   const handleDeleteApartment = async () => {
     const confirmed = window.confirm(
       'Are you sure you want to delete this apartment?'
@@ -163,7 +182,16 @@ const ApartmentDetails = () => {
 
   return (
     <div className="details-container">
-      <h1 className="details-title">{apartment.name}</h1>
+      <div className="details-title-row">
+  <h1 className="details-title">{apartment.name}</h1>
+
+  <button
+    className={`favorite-button ${apartment.favorite ? 'active' : ''}`}
+    onClick={handleToggleFavorite}
+  >
+    ★
+  </button>
+</div>
 
       <select
         className={`status-dropdown ${status.toLowerCase()}`}

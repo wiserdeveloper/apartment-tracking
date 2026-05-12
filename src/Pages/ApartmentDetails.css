@@ -411,6 +411,48 @@ body {
     transform: scale(0.98);
 }
 
+.details-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    margin-bottom: 30px;
+}
+
+.details-title-row .details-title {
+    margin-bottom: 0;
+}
+
+.favorite-button {
+    border: none;
+    background: rgba(255, 255, 255, 0.08);
+    color: #7d8397;
+
+    width: 44px;
+    height: 44px;
+
+    border-radius: 50%;
+
+    font-size: 1.5rem;
+    line-height: 1;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.favorite-button:hover {
+    background: rgba(255, 215, 0, 0.12);
+    color: #ffd166;
+    transform: translateY(-1px);
+}
+
+.favorite-button.active {
+    background: rgba(255, 215, 0, 0.18);
+    color: #ffd166;
+    box-shadow: 0 0 18px rgba(255, 209, 102, 0.25);
+}
+
 @keyframes toastFadeIn {
     from {
         opacity: 0;

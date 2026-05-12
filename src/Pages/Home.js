@@ -182,7 +182,10 @@ const Home = () => {
             className="apartment-card"
             onClick={() => navigate(`/apartment/${apartment.id}`)}
           >
-            <h2>{apartment.name}</h2>
+            <h2>
+  {apartment.favorite && <span className="home-favorite-star">★</span>}
+  {apartment.name}
+</h2>
 
             <div className={`status-pill ${apartment.status.toLowerCase()}`}>
               {apartment.status}

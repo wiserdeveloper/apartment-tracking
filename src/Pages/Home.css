@@ -271,3 +271,9 @@ body {
     font-size: 0.85rem;
     color: #cfd5e6;
 }
+
+.home-favorite-star {
+    color: #ffd166;
+    margin-right: 8px;
+    text-shadow: 0 0 12px rgba(255, 209, 102, 0.35);
+}
