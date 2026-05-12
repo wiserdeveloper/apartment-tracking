@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import apartments from '../Components/Apartments';
 import { NavLink, useNavigate } from 'react-router-dom';
+
+import { supabase } from '../supabaseClient';
 
 import './Home.css';
 
 const Home = () => {
     const [activeFilter, setActiveFilter] = useState('All');
-    const [apartmentsList, setApartmentsList] = useState(() => {
-        const savedApartments = localStorage.getItem('apartments');
-
-        return savedApartments
-            ? JSON.parse(savedApartments)
-            : apartments;
-    });
+    const [apartmentsList, setApartmentsList] = useState([]);
 
     const [showModal, setShowModal] = useState(false);
 
@@ -23,17 +18,31 @@ const Home = () => {
         website: ''
     });
 
-    useEffect(() => {
-    localStorage.setItem('apartments', JSON.stringify(apartmentsList));
-}, [apartmentsList]);
-
     const navigate = useNavigate();
 
-    const filteredApartments = activeFilter === 'All'
-        ? apartmentsList
-        : apartmentsList.filter(apartment => apartment.status === activeFilter);
+    const fetchApartments = async () => {
+    const { data, error } = await supabase
+        .from('apartments')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    const handleAddApartment = () => {
+    if (error) {
+        console.error('Error fetching apartments:', error);
+        return;
+    }
+
+    setApartmentsList(data);
+};
+
+useEffect(() => {
+    fetchApartments();
+}, []);
+
+const filteredApartments = activeFilter === 'All'
+    ? apartmentsList
+    : apartmentsList.filter(apartment => apartment.status === activeFilter);
+
+const handleAddApartment = async () => {
     if (
         !newApartment.name ||
         !newApartment.address ||
@@ -43,12 +52,23 @@ const Home = () => {
         return;
     }
 
-    const apartmentToAdd = {
-        id: Date.now(),
-        ...newApartment
-    };
+    const { error } = await supabase
+        .from('apartments')
+        .insert([
+            {
+                name: newApartment.name,
+                address: newApartment.address,
+                status: newApartment.status,
+                website: newApartment.website
+            }
+        ]);
 
-    setApartmentsList((prev) => [...prev, apartmentToAdd]);
+    if (error) {
+        console.error('Error adding apartment:', error);
+        return;
+    }
+
+    await fetchApartments();
 
     setNewApartment({
         name: '',
@@ -62,8 +82,8 @@ const Home = () => {
 
 // Scheduled Tours Section
 const upcomingTours = apartmentsList
-  .filter(apt => apt.status === 'Scheduled' && apt.tourDate)
-  .sort((a, b) => new Date(a.tourDate) - new Date(b.tourDate));
+  .filter(apt => apt.status === 'Scheduled' && apt.tour_date)
+  .sort((a, b) => new Date(a.tour_date) - new Date(b.tour_date));
 
 
   return (
@@ -86,13 +106,13 @@ const upcomingTours = apartmentsList
           <div className="upcoming-name">{apt.name}</div>
 
           <div className="upcoming-date">
-            {new Date(apt.tourDate).toLocaleString([], {
-              weekday: 'short',
-              month: 'short',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            })}
+            {new Date(apt.tour_date).toLocaleString([], {
+  weekday: 'short',
+  month: 'short',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit'
+})}
           </div>
 
           <div className="upcoming-address">

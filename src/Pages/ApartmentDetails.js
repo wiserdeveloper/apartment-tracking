@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import apartments from '../Components/Apartments';
+import { supabase } from '../supabaseClient';
 
 import './ApartmentDetails.css';
 
@@ -13,29 +13,37 @@ const ApartmentDetails = () => {
   const [showModal, setShowModal] = useState(false);
   const [tourDateInput, setTourDateInput] = useState('');
   
-  const [apartmentsList, setApartmentsList] = useState(() => {
-    const savedApartments = localStorage.getItem('apartments');
-
-    return savedApartments
-        ? JSON.parse(savedApartments)
-        : apartments;
-});
-
-  const apartment = apartmentsList.find(apartment => apartment.id === parseInt(id));
+  const [apartment, setApartment] = useState(null);
+  const [loading, setLoading] = useState(true);
+  // const [status, setStatus] = useState('');
 
   const [status, setStatus] = useState(apartment?.status || '');
-//   const [showTourModal, setShowTourModal] = useState(false);
-//   const [tourDate, setTourDate] = useState('');
-//   const [tourTime, setTourTime] = useState('');
 
-  useEffect(() => {
-    localStorage.setItem('apartments', JSON.stringify(apartmentsList));
-}, [apartmentsList]);
+  const fetchApartment = async () => {
+  const { data, error } = await supabase
+    .from('apartments')
+    .select('*')
+    .eq('id', id)
+    .single();
 
-const handleStatusChange = (e) => {
+  if (error) {
+    console.error('Error fetching apartment:', error);
+    setLoading(false);
+    return;
+  }
+
+  setApartment(data);
+  setStatus(data.status);
+  setLoading(false);
+};
+
+useEffect(() => {
+  fetchApartment();
+}, [id]);
+
+const handleStatusChange = async (e) => {
   const updatedStatus = e.target.value;
 
-  // If switching to Scheduled → open modal instead of immediately saving
   if (updatedStatus === 'Scheduled') {
     setStatus(updatedStatus);
     setShowModal(true);
@@ -44,42 +52,56 @@ const handleStatusChange = (e) => {
 
   setStatus(updatedStatus);
 
-  const updatedApartments = apartmentsList.map((apt) =>
-    apt.id === Number(id)
-      ? { 
-          ...apt, 
-          status: updatedStatus,
-          tourDate: null // clear tour date if leaving scheduled
-        }
-      : apt
-  );
+  const { error } = await supabase
+    .from('apartments')
+    .update({
+      status: updatedStatus,
+      tour_date: null
+    })
+    .eq('id', id);
 
-  setApartmentsList(updatedApartments);
+  if (error) {
+    console.error('Error updating status:', error);
+    return;
+  }
+
+  fetchApartment();
 };
 
-const handleSaveTourDate = () => {
+const handleSaveTourDate = async () => {
   if (!tourDateInput) return;
 
-  const updatedApartments = apartmentsList.map((apt) =>
-    apt.id === Number(id)
-      ? {
-          ...apt,
-          status: 'Scheduled',
-          tourDate: tourDateInput
-        }
-      : apt
-  );
+  const { error } = await supabase
+    .from('apartments')
+    .update({
+      status: 'Scheduled',
+      tour_date: tourDateInput
+    })
+    .eq('id', id);
 
-  setApartmentsList(updatedApartments);
+  if (error) {
+    console.error('Error saving tour date:', error);
+    return;
+  }
+
   setShowModal(false);
+  fetchApartment();
 };
 
-const handleDeleteApartment = () => {
+const handleDeleteApartment = async () => {
   const confirmed = window.confirm('Are you sure you want to delete this apartment?');
   if (!confirmed) return;
 
-  const updatedApartments = apartmentsList.filter((apt) => apt.id !== Number(id));
-  setApartmentsList(updatedApartments);
+  const { error } = await supabase
+    .from('apartments')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error deleting apartment:', error);
+    return;
+  }
+
   navigate('/');
 };
 
@@ -122,8 +144,8 @@ const mapUrl = apartment.address
                 <div className="tour-section">
                     <h2>Tour Scheduled For:</h2>
                     <p>
-  {apartment.tourDate
-    ? new Date(apartment.tourDate).toLocaleString([], {
+  {apartment.tour_date
+    ? new Date(apartment.tour_date).toLocaleString([], {
         weekday: 'short',
         month: 'short',
         day: 'numeric',

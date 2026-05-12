@@ -1,19 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 import './Calendar.css';
 
 const Calendar = () => {
   const navigate = useNavigate();
 
-  const [apartments] = useState(() => {
-    const saved = localStorage.getItem('apartments');
-    return saved ? JSON.parse(saved) : [];
-  });
-
+  const [apartments, setApartments] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
 
+  const fetchScheduledTours = async () => {
+    const { data, error } = await supabase
+      .from('apartments')
+      .select('*')
+      .eq('status', 'Scheduled')
+      .not('tour_date', 'is', null);
+
+    if (error) {
+      console.error('Error fetching scheduled tours:', error);
+      return;
+    }
+
+    setApartments(data);
+  };
+
+  useEffect(() => {
+    fetchScheduledTours();
+  }, []);
+
   const scheduledTours = apartments.filter(
-    apt => apt.status === 'Scheduled' && apt.tourDate
+    apt => apt.status === 'Scheduled' && apt.tour_date
   );
 
   const year = currentDate.getFullYear();
@@ -31,7 +47,8 @@ const Calendar = () => {
 
   const getToursForDay = (day) => {
     return scheduledTours.filter((apt) => {
-      const date = new Date(apt.tourDate);
+      const date = new Date(apt.tour_date);
+
       return (
         date.getFullYear() === year &&
         date.getMonth() === month &&
@@ -41,16 +58,16 @@ const Calendar = () => {
   };
 
   const isToday = (day) => {
-  if (!day) return false;
+    if (!day) return false;
 
-  const now = new Date();
+    const now = new Date();
 
-  return (
-    day === now.getDate() &&
-    month === now.getMonth() &&
-    year === now.getFullYear()
-  );
-};
+    return (
+      day === now.getDate() &&
+      month === now.getMonth() &&
+      year === now.getFullYear()
+    );
+  };
 
   const days = [];
 
@@ -78,55 +95,53 @@ const Calendar = () => {
       </div>
 
       <div className="calendar-grid responsive">
-  {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => (
-    <div key={d} className="calendar-day-label">{d}</div>
-  ))}
+        {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => (
+          <div key={d} className="calendar-day-label">{d}</div>
+        ))}
 
-  {days.map((day, idx) => {
-    if (!day) return <div key={idx} className="calendar-cell empty" />;
+        {days.map((day, idx) => {
+          if (!day) return <div key={idx} className="calendar-cell empty" />;
 
-    const tours = getToursForDay(day);
+          const tours = getToursForDay(day);
 
-    return (
-      <div key={idx} className={`calendar-cell ${day && isToday(day) ? 'today' : ''}`}>
-        <div className="calendar-date-row">
-          <span className="calendar-date">{day}</span>
+          return (
+            <div key={idx} className={`calendar-cell ${day && isToday(day) ? 'today' : ''}`}>
+              <div className="calendar-date-row">
+                <span className="calendar-date">{day}</span>
+              </div>
 
-        </div>
+              <div className="calendar-events">
+                {tours.map(tour => (
+                  <div
+                    key={tour.id}
+                    className="calendar-event"
+                    onClick={() => navigate(`/apartment/${tour.id}`)}
+                  >
+                    <div className="event-name">{tour.name}</div>
 
-        <div className="calendar-events">
-          {tours.map(tour => (
-            <div
-              key={tour.id}
-              className="calendar-event"
-              onClick={() => navigate(`/apartment/${tour.id}`)}
-            >
-              <div className="event-name">{tour.name}</div>
-
-              <div className="event-time">
-                {new Date(tour.tourDate).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
+                    <div className="event-time">
+                      {new Date(tour.tour_date).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
-    );
-    
-  })}
-</div>
 
-<div className="back-actions">
-  <button
-    className="back-button"
-    onClick={() => navigate('/')}
-  >
-    ← Back to Homepage
-  </button>
-</div>
-</div>
+      <div className="back-actions">
+        <button
+          className="back-button"
+          onClick={() => navigate('/')}
+        >
+          ← Back to Homepage
+        </button>
+      </div>
+    </div>
   );
 };
 
