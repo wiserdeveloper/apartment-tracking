@@ -19,6 +19,10 @@ const ApartmentDetails = () => {
 
   const [status, setStatus] = useState(apartment?.status || '');
 
+  const [notes, setNotes] = useState('');
+
+  const [showSavedToast, setShowSavedToast] = useState(false);
+
   const fetchApartment = useCallback(async () => {
   const { data, error } = await supabase
     .from('apartments')
@@ -34,6 +38,7 @@ const ApartmentDetails = () => {
 
   setApartment(data);
   setStatus(data.status);
+  setNotes(data.notes || '');
   setLoading(false);
 }, [id]);
 
@@ -118,7 +123,23 @@ const mapUrl = apartment.address
   ? `https://www.google.com/maps?q=${encodeURIComponent(apartment.address)}&output=embed`
   : null;
 
+const handleSaveNotes = async () => {
+  const { error } = await supabase
+    .from('apartments')
+    .update({ notes })
+    .eq('id', id);
 
+  if (error) {
+    console.error('Error saving notes:', error);
+    return;
+  }
+
+  setShowSavedToast(true);
+
+  setTimeout(() => {
+    setShowSavedToast(false);
+  }, 2500);
+};
 
   return (
         <div className="details-container">
@@ -181,6 +202,24 @@ const mapUrl = apartment.address
                 <p>{apartment.address}</p>
             </div>
 
+            <div className="notes-section">
+  <h2>Notes:</h2>
+
+  <textarea
+    className="notes-textarea"
+    value={notes}
+    onChange={(e) => setNotes(e.target.value)}
+    placeholder="Add notes about this apartment..."
+  />
+
+  <button
+    className="save-notes-button"
+    onClick={handleSaveNotes}
+  >
+    Save Notes
+  </button>
+</div>
+
             <div className="website-section">
                 <a
                     href={apartment.website}
@@ -189,6 +228,15 @@ const mapUrl = apartment.address
                 >
                     Visit Website
                 </a>
+            </div>
+
+            <div className="details-actions">
+                <button
+                    className="back-button"
+                    onClick={() => navigate('/')}
+                >
+                    ← Back to Homepage
+                </button>
             </div>
 
             <div className="delete-section">
@@ -200,14 +248,6 @@ const mapUrl = apartment.address
                 </button>
             </div>
 
-            <div className="details-actions">
-                <button
-                    className="back-button"
-                    onClick={() => navigate('/')}
-                >
-                    ← Back to Homepage
-                </button>
-            </div>
             {showModal && (
   <div className="modal-overlay">
     <div className="modal-card">
@@ -233,7 +273,11 @@ const mapUrl = apartment.address
     </div>
   </div>
 )}
-
+{showSavedToast && (
+  <div className="save-toast">
+    Notes Saved
+  </div>
+)}
         </div>
     );
 };
